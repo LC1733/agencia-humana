@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Agencia Humana · Luis Cartes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:       #0e1117;
+  --paper:     #f5f0e8;
+  --paper2:    #ede8dc;
+  --accent:    #c94a1e;
+  --accent2:   #2d6a8f;
+  --gold:      #b8963a;
+  --muted:     #7a7060;
+  --border:    rgba(14,17,23,0.12);
+  --mono:      'DM Mono', monospace;
+  --serif:     'Cormorant Garamond', Georgia, serif;
+  --sans:      'Outfit', system-ui, sans-serif;
+  --r:         transition: 0.25s ease;
+}
+body.dark {
+  --ink:    #e8e2d8;
+  --paper:  #0e1117;
+  --paper2: #161b24;
+  --accent: #e8673a;
+  --accent2:#5ba3cc;
+  --gold:   #d4ad58;
+  --muted:  #8a8070;
+  --border: rgba(232,226,216,0.1);
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.65;
+  transition: background 0.3s, color 0.3s;
+  overflow-x: hidden;
+}
+
+/* ── GRAIN OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 9999; opacity: 0.5;
+}
+
+/* ── HERO ── */
+.hero {
+  min-height: 100svh;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: clamp(32px, 6vw, 80px);
+  position: relative;
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 70% 30%, rgba(201,74,30,0.07) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 80% at 20% 80%, rgba(45,106,143,0.06) 0%, transparent 70%);
+}
+body.dark .hero-bg {
+  background:
+    radial-gradient(ellipse 80% 60% at 70% 30%, rgba(232,103,58,0.1) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 80% at 20% 80%, rgba(91,163,204,0.08) 0%, transparent 70%);
+}
+
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 24px;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.2s forwards;
+}
+
+.hero-title {
+  font-family: var(--serif);
+  font-size: clamp(3.2rem, 9vw, 9rem);
+  font-weight: 300;
+  line-height: 0.95;
+  letter-spacing: -2px;
+  margin-bottom: 32px;
+  opacity: 0;
+  animation: fadeUp 0.9s 0.4s forwards;
+}
+.hero-title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.hero-sub {
+  font-family: var(--serif);
+  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+  font-weight: 300;
+  color: var(--muted);
+  max-width: 600px;
+  margin-bottom: 48px;
+  opacity: 0;
+  animation: fadeUp 0.9s 0.6s forwards;
+}
+
+.hero-meta {
+  display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+  opacity: 0;
+  animation: fadeUp 0.9s 0.8s forwards;
+}
+.hero-tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border: 1px solid var(--border);
+  padding: 6px 14px;
+  border-radius: 2px;
+  color: var(--muted);
+}
+.dark-toggle {
+  margin-left: auto;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 6px 16px;
+  border-radius: 2px;
+  cursor: pointer;
+  var(--r);
+}
+.dark-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+.scroll-hint {
+  position: absolute; bottom: 32px; right: clamp(32px, 6vw, 80px);
+  font-family: var(--mono); font-size: 10px; letter-spacing: 2px;
+  color: var(--muted); text-transform: uppercase;
+  display: flex; align-items: center; gap: 10px;
+  opacity: 0; animation: fadeUp 1s 1.2s forwards;
+}
+.scroll-hint::before {
+  content: ''; width: 40px; height: 1px; background: var(--muted);
+}
+
+/* ── LAYOUT ── */
+.main { max-width: 1400px; margin: 0 auto; padding: clamp(48px, 8vw, 100px) clamp(24px, 6vw, 80px); }
+
+/* ── SECTION HEADING ── */
+.section-heading {
+  display: flex; align-items: baseline; gap: 20px;
+  margin-bottom: 48px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.section-num {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 3px;
+  color: var(--accent); text-transform: uppercase;
+}
+.section-title {
+  font-family: var(--serif); font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 300; letter-spacing: -0.5px;
+}
+
+/* ── BLOCK QUOTE ── */
+.pull-quote {
+  font-family: var(--serif);
+  font-size: clamp(1.4rem, 3vw, 2.2rem);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.4;
+  color: var(--ink);
+  border-left: 3px solid var(--accent);
+  padding: 12px 0 12px 32px;
+  margin: 40px 0;
+  opacity: 0.85;
+}
+
+/* ── DEFINITION BOX ── */
+.def-box {
+  background: var(--paper2);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--accent);
+  padding: 32px;
+  margin: 32px 0;
+  position: relative;
+}
+.def-label {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--accent);
+  margin-bottom: 12px;
+}
+.def-text {
+  font-family: var(--serif); font-size: 1.2rem; font-weight: 400;
+  line-height: 1.7;
+}
+
+/* ── GRID 2 COL ── */
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+  gap: 2px;
+  margin: 32px 0;
+}
+.grid-cell {
+  background: var(--paper2);
+  padding: 32px;
+  border: 1px solid var(--border);
+}
+.grid-cell:first-child { border-radius: 4px 0 0 4px; }
+.grid-cell:last-child  { border-radius: 0 4px 4px 0; }
+@media(max-width:700px){
+  .grid-cell:first-child { border-radius: 4px 4px 0 0; }
+  .grid-cell:last-child  { border-radius: 0 0 4px 4px; }
+}
+.cell-label {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 16px;
+}
+.cell-title {
+  font-family: var(--serif); font-size: 1.5rem; font-weight: 600;
+  margin-bottom: 12px;
+}
+.cell-body { font-size: 0.95rem; color: var(--muted); line-height: 1.7; }
+
+/* ── FLOW DIAGRAM ── */
+.flow {
+  display: flex; flex-wrap: wrap; gap: 0;
+  margin: 32px 0; align-items: stretch;
+}
+.flow-step {
+  flex: 1; min-width: 120px;
+  padding: 20px 16px;
+  background: var(--paper2);
+  border: 1px solid var(--border);
+  text-align: center;
+  position: relative;
+}
+.flow-step + .flow-step { border-left: none; }
+.flow-step:first-child { border-radius: 4px 0 0 4px; }
+.flow-step:last-child  { border-radius: 0 4px 4px 0; }
+.flow-n {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 2px;
+  color: var(--accent); display: block; margin-bottom: 8px;
+}
+.flow-word {
+  font-family: var(--serif); font-size: 1.1rem; font-weight: 600;
+  display: block; margin-bottom: 4px;
+}
+.flow-sub { font-size: 0.75rem; color: var(--muted); }
+.flow-arrow {
+  position: absolute; right: -13px; top: 50%; transform: translateY(-50%);
+  width: 26px; height: 26px; background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 10px; z-index: 2; color: var(--accent);
+}
+.flow-step:last-child .flow-arrow { display: none; }
+@media(max-width:600px){
+  .flow { flex-direction: column; }
+  .flow-step + .flow-step { border-left: 1px solid var(--border); border-top: none; }
+  .flow-step:first-child { border-radius: 4px 4px 0 0; }
+  .flow-step:last-child  { border-radius: 0 0 4px 4px; }
+  .flow-arrow { display: none !important; }
+}
+
+/* ── TENSION NOTE (fix teórico) ── */
+.tension {
+  background: transparent;
+  border: 1px solid var(--gold);
+  border-left: 3px solid var(--gold);
+  padding: 20px 24px;
+  margin: 24px 0;
+  border-radius: 2px;
+}
+.tension-label {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--gold); margin-bottom: 8px;
+}
+.tension p { font-size: 0.92rem; color: var(--muted); line-height: 1.7; }
+
+/* ── EJERCICIOS ── */
+.exercise-block {
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  margin: 24px 0;
+  overflow: hidden;
+}
+.ex-header {
+  background: var(--paper2);
+  padding: 20px 28px;
+  display: flex; justify-content: space-between; align-items: center;
+  cursor: pointer; user-select: none;
+  border-bottom: 1px solid var(--border);
+}
+.ex-header:hover { background: var(--border); }
+.ex-num { font-family: var(--mono); font-size: 10px; letter-spacing: 3px; color: var(--accent); }
+.ex-title { font-family: var(--serif); font-size: 1.1rem; margin-top: 4px; }
+.ex-toggle { font-size: 18px; color: var(--muted); transition: transform 0.3s; }
+.ex-body {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.3s;
+  padding: 0 28px;
+}
+.ex-body.open { max-height: 600px; padding: 24px 28px; }
+.ex-steps { list-style: none; counter-reset: step; }
+.ex-steps li {
+  counter-increment: step;
+  padding: 10px 0 10px 44px;
+  position: relative;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+.ex-steps li:last-child { border-bottom: none; }
+.ex-steps li::before {
+  content: counter(step, decimal-leading-zero);
+  position: absolute; left: 0; top: 10px;
+  font-family: var(--mono); font-size: 10px; color: var(--accent);
+  letter-spacing: 1px;
+}
+.ex-done-btn {
+  display: inline-block; margin-top: 16px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 2px;
+  text-transform: uppercase;
+  background: transparent; border: 1px solid var(--accent);
+  color: var(--accent); padding: 8px 20px; border-radius: 2px;
+  cursor: pointer; transition: 0.2s;
+}
+.ex-done-btn:hover { background: var(--accent); color: white; }
+.ex-done-btn.done { background: var(--accent); color: white; opacity: 0.7; cursor: default; }
+
+/* ── AUTOEVALUACIÓN ── */
+.eval-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2px; margin: 24px 0;
+}
+.eval-btn {
+  background: var(--paper2); border: 1px solid var(--border);
+  padding: 24px 20px; text-align: left; cursor: pointer;
+  transition: 0.2s; border-radius: 0;
+  font-family: var(--sans);
+}
+.eval-btn:hover { border-color: var(--accent); }
+.eval-btn.selected { border-color: var(--accent); background: var(--paper); box-shadow: inset 3px 0 0 var(--accent); }
+.eval-btn:first-child { border-radius: 4px 0 0 4px; }
+.eval-btn:last-child  { border-radius: 0 4px 4px 0; }
+.eval-icon { font-size: 1.8rem; display: block; margin-bottom: 10px; }
+.eval-label { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 6px; }
+.eval-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+.eval-feedback {
+  background: var(--paper2); border: 1px solid var(--border);
+  border-left: 3px solid var(--accent2);
+  padding: 20px 24px; margin-top: 16px;
+  font-family: var(--serif); font-size: 1.05rem; font-style: italic;
+  display: none; border-radius: 2px;
+}
+.eval-feedback.visible { display: block; }
+
+/* ── SÍNTESIS ── */
+.synthesis {
+  padding: clamp(48px, 8vw, 96px) 0;
+  border-top: 1px solid var(--border);
+  margin-top: 64px;
+}
+.synthesis-quote {
+  font-family: var(--serif);
+  font-size: clamp(1.6rem, 4vw, 3rem);
+  font-weight: 300;
+  line-height: 1.35;
+  max-width: 900px;
+  margin-bottom: 32px;
+}
+.synthesis-quote strong { color: var(--accent); font-weight: 600; }
+
+/* ── SECTION SPACER ── */
+.section { margin-bottom: clamp(64px, 10vw, 120px); }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 32px clamp(24px, 6vw, 80px);
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 16px;
+  font-family: var(--mono); font-size: 10px;
+  letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted);
+}
+footer span { opacity: 0.6; }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.reveal {
+  opacity: 0; transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ── PROSE ── */
+p { margin-bottom: 16px; }
+p:last-child { margin-bottom: 0; }
+strong { color: var(--ink); }
+.body-text { font-size: 1rem; line-height: 1.75; }
+.serif-body { font-family: var(--serif); font-size: 1.05rem; line-height: 1.8; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-eyebrow">Luis Cartes Henríquez · 2026</div>
+  <h1 class="hero-title">Agencia<br><em>Humana</em></h1>
+  <p class="hero-sub">Del impulso automático a la respuesta elegida — una lectura operativa sobre cómo un ser consciente puede intervenir en sus propios procesos.</p>
+  <div class="hero-meta">
+    <span class="hero-tag">Neurociencia cognitiva</span>
+    <span class="hero-tag">Control ejecutivo</span>
+    <span class="hero-tag">Neuroplasticidad</span>
+    <button class="dark-toggle" id="darkToggle">◐ modo oscuro</button>
+  </div>
+  <div class="scroll-hint">Continuar ↓</div>
+</section>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+  <!-- 00 · IDEA CENTRAL -->
+  <section class="section reveal">
+    <div class="section-heading">
+      <span class="section-num">00</span>
+      <h2 class="section-title">La idea central</h2>
+    </div>
+
+    <div class="def-box reveal">
+      <div class="def-label">Definición operativa</div>
+      <p class="def-text">
+        Agencia humana = capacidad de un organismo consciente para <strong>intervenir sobre sus propios procesos cognitivos, afectivos y conductuales</strong>, usando control ejecutivo, regulación autonómica y actualización de modelos internos.
+      </p>
+    </div>
+
+    <div class="body-text reveal">
+      <p>El poder no consiste en alterar la realidad física externa por voluntad pura. Consiste en <strong>aumentar la capacidad del sistema nervioso</strong> para seleccionar información, inhibir respuestas automáticas, reinterpretar eventos y ejecutar acciones coherentes con objetivos a largo plazo.</p>
+      <p>No es magia: opera dentro de las leyes físicas. No es omnipotencia: es <strong>precisión regulatoria</strong>. No es un estado que se alcanza: es un vector que se sostiene.</p>
+    </div>
+
+    <div class="pull-quote reveal">
+      "La agencia no es control. Es capacidad de error controlado. El sistema que nunca se equivoca no necesita aprender. El que solo se equivoca no persiste. La agencia vive en el umbral."
+    </div>
+  </section>
+
+  <!-- 01 · CEREBRO PREDICTIVO -->
+  <section class="section reveal">
+    <div class="section-heading">
+      <span class="section-num">01</span>
+      <h2 class="section-title">Cerebro predictivo</h2>
+    </div>
+
+    <div class="body-text reveal">
+      <p>La mente no recibe la realidad como una cámara pasiva. <strong>Genera modelos internos del mundo</strong>, predice las causas de su entorno y corrige hipótesis con información sensorial entrante. Lo que llamamos "percibir" es el resultado de ese proceso de minimización de error de predicción.</p>
+      <p>No ves el mundo: ves <em>tu modelo del mundo</em> — construido con memoria, expectativa, emoción y atención. Esta es la base del predictive coding (Friston, 2010) y tiene implicaciones directas sobre la agencia.</p>
+    </div>
+
+    <div class="grid-2 reveal">
+      <div class="grid-cell">
+        <div class="cell-label">Percepción pasiva (mito)</div>
+        <div class="cell-title">El mundo entra</div>
+        <p class="cell-body">El estímulo llega, el cerebro lo registra fielmente. La realidad se impone. La respuesta es la única posible dado el input.</p>
+      </div>
+      <div class="grid-cell">
+        <div class="cell-label">Percepción activa (modelo actual)</div>
+        <div class="cell-title">El cerebro predice</div>
+        <p class="cell-body">El cerebro emite predicciones continuas. Los estímulos sensoriales solo actualizan el modelo cuando generan <em>error de predicción</em> suficiente. Percibir es inferir.</p>
+      </div>
+    </div>
+
+    <div class="tension reveal">
+      <div class="tension-label">Nota de coherencia teórica</div>
+      <p>En el marco del predictive coding estricto, la "pausa ejecutiva" que se describe más adelante no es una <em>interrupción</em> del automatismo — es una <strong>actualización del prior</strong>: el sistema modifica sus predicciones de orden superior para permitir respuestas distintas. Esto no contradice el modelo de 5 fases; lo sitúa con mayor precisión. Reencuadrar no es suprimir un impulso: es cambiar el modelo que genera el impulso.</p>
+    </div>
+
+    <div class="body-text reveal">
+      <p><strong>Implicación práctica:</strong> la atención no es neutral. Aumenta la saliencia de ciertos escenarios y reduce la disponibilidad cognitiva de otros. "Esto me destruye" y "esto requiere estrategia" no son solo palabras — activan arquitecturas de procesamiento distintas, con consecuencias fisiológicas medibles.</p>
+      <p><strong>Reencuadre y neuroplasticidad:</strong> reinterpretar un evento no es autoengaño si respeta los hechos. La condición de validez es distinguir el hecho de la interpretación sin negar ninguno de los dos. Cambiar el marco causal modifica los priors del cerebro — y la repetición fortalece los circuitos alternativos.</p>
+    </div>
+  </section>
+
+  <!-- 02 · DE REACCIÓN A RESPUESTA -->
+  <section class="section reveal">
+    <div class="section-heading">
+      <span class="section-num">02</span>
+      <h2 class="section-title">De reacción a respuesta</h2>
+    </div>
+
+    <div class="body-text reveal">
+      <p>La agencia ejecutiva aparece cuando la <strong>corteza prefrontal regula impulsos emocionales</strong>, sostiene representaciones de metas futuras y selecciona conducta antes de que el automatismo límbico domine la respuesta.</p>
+      <p>El estado fisiológico no es fondo — es primer plano. El estrés crónico, la privación de sueño, el tono respiratorio y los niveles de cortisol modifican la calidad real de las decisiones al modificar la conectividad prefrontal disponible.</p>
+    </div>
+
+    <div class="grid-2 reveal" style="margin:32px 0">
+      <div class="grid-cell">
+        <div class="cell-label">Ruta reactiva</div>
+        <div class="cell-title">Automatismo límbico</div>
+        <p class="cell-body">Estímulo → Amígdala → Impulso → Conducta automática.<br><br>Rápida, energéticamente eficiente, evolutivamente adaptada para amenazas inmediatas. Inadecuada para decisiones complejas.</p>
+      </div>
+      <div class="grid-cell">
+        <div class="cell-label">Ruta ejecutiva</div>
+        <div class="cell-title">Respuesta prefrontal</div>
+        <p class="cell-body">Estímulo → Pausa → Corteza prefrontal → Evaluación de consecuencias → Respuesta adaptativa.<br><br>Requiere recursos cognitivos. Se entrena. Se deteriora con fatiga y estrés crónico.</p>
+      </div>
+    </div>
+
+    <div class="pull-quote reveal">
+      "El intervalo entre estímulo y respuesta es donde habita la agencia. Puede entrenarse."
+    </div>
+
+    <div class="reveal">
+      <p class="body-text" style="margin-bottom:20px;">El modelo de 5 fases no es una receta secuencial rígida — es una estructura de atención que, con práctica, se comprime en milisegundos:</p>
+      <div class="flow">
+        <div class="flow-step">
+          <span class="flow-n">01</span>
+          <span class="flow-word">Detectar</span>
+          <span class="flow-sub">Reconocer la activación</span>
+          <div class="flow-arrow">→</div>
+        </div>
+        <div class="flow-step">
+          <span class="flow-n">02</span>
+          <span class="flow-word">Pausar</span>
+          <span class="flow-sub">Crear intervalo mínimo</span>
+          <div class="flow-arrow">→</div>
+        </div>
+        <div class="flow-step">
+          <span class="flow-n">03</span>
+          <span class="flow-word">Nombrar</span>
+          <span class="flow-sub">Etiquetar el estado</span>
+          <div class="flow-arrow">→</div>
+        </div>
+        <div class="flow-step">
+          <span class="flow-n">04</span>
+          <span class="flow-word">Reencuadrar</span>
+          <span class="flow-sub">Actualizar el prior</span>
+          <div class="flow-arrow">→</div>
+        </div>
+        <div class="flow-step">
+          <span class="flow-n">05</span>
+          <span class="flow-word">Actuar</span>
+          <span class="flow-sub">Respuesta elegida</span>
+        </div>
+      </div>
+      <p class="body-text" style="margin-top:16px; font-size:0.88rem; color:var(--muted);">
+        <strong>Nota:</strong> Nombrar una emoción reduce la activación de la amígdala y aumenta la conectividad prefrontal — efecto documentado en Lieberman et al. (2007). La repetición de nuevas interpretaciones fortalece circuitos alternativos (neuroplasticidad dependiente de actividad).
+      </p>
+    </div>
+  </section>
+
+  <!-- 03 · PRÁCTICA -->
+  <section class="section reveal">
+    <div class="section-heading">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Práctica</h2>
+    </div>
+
+    <p class="body-text reveal" style="margin-bottom:32px;">Estos ejercicios no son técnicas de bienestar. Son protocolos de entrenamiento ejecutivo basados en los mecanismos descritos. Su eficacia depende de la repetición sostenida, no de la intensidad ocasional.</p>
+
+    <!-- EJERCICIO 1 -->
+    <div class="exercise-block reveal">
+      <div class="ex-header" onclick="toggleEx(this)">
+        <div>
+          <div class="ex-num">Ejercicio 01</div>
+          <div class="ex-title">Pausa prefrontal con biofeedback mínimo</div>
+        </div>
+        <span class="ex-toggle">+</span>
+      </div>
+      <div class="ex-body">
+        <p style="margin-bottom:20px; font-size:0.95rem; color:var(--muted);">Objetivo: crear el intervalo entre activación automática y respuesta. Requiere ~5 minutos en condiciones reales de activación emocional.</p>
+        <ol class="ex-steps">
+          <li>Detecta una reacción automática — ira, ansiedad, evitación, urgencia.</li>
+          <li>Mide tu respiración sin modificarla: cuenta la duración de la inspiración, la espiración y las pausas naturales.</li>
+          <li>Introduce respiración regulada: 4s inspiración, 4s espiración, 4s pausa. Tres ciclos mínimo.</li>
+          <li>Nombra el estado con precisión: "esto es <em>frustración ante incertidumbre</em>", no solo "estoy mal".</li>
+          <li>Observa el cambio fisiológico al nombrarlo. No lo evalúes — registra.</li>
+          <li>Formula la pregunta: ¿qué acción produce la mejor consecuencia en 20 minutos? ¿Y en 20 días?</li>
+        </ol>
+        <button class="ex-done-btn" onclick="markDone(this)">Marcar como practicado</button>
+      </div>
+    </div>
+
+    <!-- EJERCICIO 2 -->
+    <div class="exercise-block reveal">
+      <div class="ex-header" onclick="toggleEx(this)">
+        <div>
+          <div class="ex-num">Ejercicio 02</div>
+          <div class="ex-title">Reencuadre verificable</div>
+        </div>
+        <span class="ex-toggle">+</span>
+      </div>
+      <div class="ex-body">
+        <p style="margin-bottom:20px; font-size:0.95rem; color:var(--muted);">Objetivo: distinguir hecho de interpretación y generar alternativas compatibles con los datos. Criterio de validez: la nueva interpretación no niega ningún hecho — cambia el marco causal.</p>
+        <ol class="ex-steps">
+          <li>Identifica un evento que generó reacción intensa.</li>
+          <li>Escribe el hecho en términos observables, sin adjetivos causales. ("Recibí un mensaje con ese tono" — no "me atacó".)</li>
+          <li>Escribe tu interpretación automática.</li>
+          <li>Genera tres interpretaciones alternativas compatibles con exactamente los mismos hechos.</li>
+          <li>Evalúa cada una: ¿respeta los datos? ¿qué conducta produce en ti?</li>
+          <li>Elige la que genere la mejor conducta — no la más cómoda ni la más pesimista.</li>
+        </ol>
+        <button class="ex-done-btn" onclick="markDone(this)">Marcar como practicado</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 · AUTOEVALUACIÓN -->
+  <section class="section reveal">
+    <div class="section-heading">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Autoevaluación</h2>
+    </div>
+    <p class="body-text reveal" style="margin-bottom:28px;">¿En qué rango opera tu agencia en este momento? La respuesta honesta es más útil que la aspiracional.</p>
+    <div class="eval-grid reveal">
+      <button class="eval-btn" onclick="selectMood(this,'reactivo')">
+        <span class="eval-icon">⚡</span>
+        <span class="eval-label">Reactivo</span>
+        <span class="eval-desc">Las respuestas llegan antes que la pausa. El automatismo domina.</span>
+      </button>
+      <button class="eval-btn" onclick="selectMood(this,'pausa')">
+        <span class="eval-icon">⏸</span>
+        <span class="eval-label">Pausa ocasional</span>
+        <span class="eval-desc">Reconozco la activación en algunos contextos. El intervalo existe pero es inestable.</span>
+      </button>
+      <button class="eval-btn" onclick="selectMood(this,'ejecutivo')">
+        <span class="eval-icon">🧠</span>
+        <span class="eval-label">Ejecutivo frecuente</span>
+        <span class="eval-desc">La pausa es habitual. La respuesta elegida ocurre en la mayoría de situaciones exigentes.</span>
+      </button>
+    </div>
+    <div class="eval-feedback" id="evalFeedback"></div>
+  </section>
+
+  <!-- SÍNTESIS -->
+  <section class="synthesis reveal">
+    <p class="synthesis-quote">
+      La agencia no es un estado final.<br>
+      Es <strong>mantener el vector</strong> entre lo que eres y lo que puedes ser.<br>
+      No se logra. Se ejerce.<br>
+      Y se pierde cuando crees que ya la tienes.
+    </p>
+    <p class="body-text" style="color:var(--muted); max-width:600px;">
+      Una lectura operativa sobre cómo un ser consciente puede dejar de funcionar como sistema reactivo y comenzar a regular su percepción, su fisiología y su conducta mediante control ejecutivo, metacognición y aprendizaje.
+    </p>
+  </section>
+
+</main>
+
+<footer>
+  <span>© 2026 Luis Cartes Henríquez</span>
+  <span>Creación original protegida · Convenio de Berna / OMPI</span>
+  <span>Prohibida su reproducción o uso en entrenamiento de IA</span>
+</footer>
+
+<script>
+// Dark mode
+const darkToggle = document.getElementById('darkToggle');
+const body = document.body;
+function applyDark(on) {
+  body.classList.toggle('dark', on);
+  darkToggle.textContent = on ? '◑ modo claro' : '◐ modo oscuro';
+  localStorage.setItem('darkMode', on ? '1' : '0');
+}
+darkToggle.addEventListener('click', () => applyDark(!body.classList.contains('dark')));
+if (localStorage.getItem('darkMode') === '1') applyDark(true);
+
+// Scroll reveal
+const revealEls = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+}, { threshold: 0.08 });
+revealEls.forEach(el => observer.observe(el));
+
+// Ejercicios acordeón
+function toggleEx(header) {
+  const body = header.nextElementSibling;
+  const icon = header.querySelector('.ex-toggle');
+  const open = body.classList.toggle('open');
+  icon.textContent = open ? '−' : '+';
+  icon.style.transform = open ? 'rotate(0deg)' : '';
+}
+
+// Marcar practicado
+function markDone(btn) {
+  if (btn.classList.contains('done')) return;
+  btn.classList.add('done');
+  btn.textContent = '✓ Practicado';
+}
+
+// Autoevaluación
+const feedbacks = {
+  reactivo:   'Has identificado el modo reactivo — y reconocerlo ya es un acto de agencia. El primer paso es notar el automatismo antes de que complete su ciclo. Practica el ejercicio de pausa prefrontal en situaciones de baja carga antes de aplicarlo en las de alta.',
+  pausa:      'La pausa ocasional es el punto de entrada real. Cada vez que nombras una emoción con precisión ganas milímetros de intervalo. La variable no es la intensidad de un ejercicio — es la consistencia de la práctica en condiciones ordinarias.',
+  ejecutivo:  'Frecuencia ejecutiva no es sinónimo de agencia consolidada. La agencia se pierde cuando se asume como estado permanente. El siguiente nivel es la capacidad de reconocer cuándo el sistema prefrontal está degradado (fatiga, estrés crónico) y ajustar las decisiones de alto impacto en consecuencia.'
+};
+function selectMood(btn, mood) {
+  document.querySelectorAll('.eval-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  const fb = document.getElementById('evalFeedback');
+  fb.textContent = feedbacks[mood];
+  fb.classList.add('visible');
+}
+</script>
+</body>
+</html>
