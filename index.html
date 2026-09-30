@@ -19,7 +19,6 @@
   --mono:      'DM Mono', monospace;
   --serif:     'Cormorant Garamond', Georgia, serif;
   --sans:      'Outfit', system-ui, sans-serif;
-  --r:         transition: 0.25s ease;
 }
 body.dark {
   --ink:    #e8e2d8;
@@ -139,7 +138,7 @@ body.dark .hero-bg {
   padding: 6px 16px;
   border-radius: 2px;
   cursor: pointer;
-  var(--r);
+  transition: 0.25s ease;
 }
 .dark-toggle:hover { border-color: var(--accent); color: var(--accent); }
 
@@ -438,7 +437,7 @@ strong { color: var(--ink); }
 <main class="main">
 
   <!-- 00 · IDEA CENTRAL -->
-  <section class="section reveal">
+  <section class="section reveal" id="s00">
     <div class="section-heading">
       <span class="section-num">00</span>
       <h2 class="section-title">La idea central</h2>
@@ -462,7 +461,7 @@ strong { color: var(--ink); }
   </section>
 
   <!-- 01 · CEREBRO PREDICTIVO -->
-  <section class="section reveal">
+  <section class="section reveal" id="s01">
     <div class="section-heading">
       <span class="section-num">01</span>
       <h2 class="section-title">Cerebro predictivo</h2>
@@ -498,7 +497,7 @@ strong { color: var(--ink); }
   </section>
 
   <!-- 02 · DE REACCIÓN A RESPUESTA -->
-  <section class="section reveal">
+  <section class="section reveal" id="s02">
     <div class="section-heading">
       <span class="section-num">02</span>
       <h2 class="section-title">De reacción a respuesta</h2>
@@ -566,7 +565,7 @@ strong { color: var(--ink); }
   </section>
 
   <!-- 03 · PRÁCTICA -->
-  <section class="section reveal">
+  <section class="section reveal" id="s03">
     <div class="section-heading">
       <span class="section-num">03</span>
       <h2 class="section-title">Práctica</h2>
@@ -622,7 +621,7 @@ strong { color: var(--ink); }
   </section>
 
   <!-- 04 · AUTOEVALUACIÓN -->
-  <section class="section reveal">
+  <section class="section reveal" id="s04">
     <div class="section-heading">
       <span class="section-num">04</span>
       <h2 class="section-title">Autoevaluación</h2>
@@ -687,6 +686,10 @@ const observer = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
 }, { threshold: 0.08 });
 revealEls.forEach(el => observer.observe(el));
+
+// Salto directo a sección (#s00…#s04) desde el hub Mente & Decisión
+const hashTarget = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+if (hashTarget) requestAnimationFrame(() => hashTarget.scrollIntoView({ behavior: 'smooth', block: 'start' }));
 
 // Ejercicios acordeón
 function toggleEx(header) {
